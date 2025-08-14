@@ -37,8 +37,8 @@ import {
 const Reports = () => {
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
-  const [selectedDriver, setSelectedDriver] = useState("");
-  const [selectedVehicle, setSelectedVehicle] = useState("");
+  const [selectedDriver, setSelectedDriver] = useState("all");
+  const [selectedVehicle, setSelectedVehicle] = useState("all");
 
   const salaryData = [
     {
@@ -166,7 +166,7 @@ const Reports = () => {
                     <SelectValue placeholder="Все водители" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Все водители</SelectItem>
+                    <SelectItem value="all">Все водители</SelectItem>
                     <SelectItem value="ivanov">Иванов А.П.</SelectItem>
                     <SelectItem value="petrov">Петров В.С.</SelectItem>
                     <SelectItem value="sidorov">Сидоров М.И.</SelectItem>
@@ -181,7 +181,7 @@ const Reports = () => {
                     <SelectValue placeholder="Все ТС" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Все ТС</SelectItem>
+                    <SelectItem value="all">Все ТС</SelectItem>
                     <SelectItem value="kamaz">КамАЗ 5490</SelectItem>
                     <SelectItem value="maz">МАЗ 6430</SelectItem>
                     <SelectItem value="volvo">Volvo FH16</SelectItem>
