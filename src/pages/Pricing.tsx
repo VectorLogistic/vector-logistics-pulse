@@ -18,7 +18,7 @@ const Pricing = () => {
       price: "0",
       description: "Для небольших компаний до 3 машин",
       icon: <Truck className="w-5 h-5" />,
-      color: "bg-muted",
+      color: "bg-gradient-to-br from-slate-600 to-slate-700 shadow-lg",
       features: [
         "До 3 транспортных средств",
         "До 5 водителей",
@@ -36,7 +36,7 @@ const Pricing = () => {
       price: "2990",
       description: "Для растущих транспортных компаний",
       icon: <Zap className="w-5 h-5" />,
-      color: "bg-primary",
+      color: "bg-gradient-to-br from-primary to-primary-hover shadow-elegant",
       popular: true,
       features: [
         "До 50 транспортных средств",
@@ -54,7 +54,7 @@ const Pricing = () => {
       price: "9990",
       description: "Для крупных логистических компаний",
       icon: <Crown className="w-5 h-5" />,
-      color: "bg-warning",
+      color: "bg-gradient-to-br from-warning to-amber-600 shadow-lg",
       features: [
         "Неограниченный автопарк",
         "Неограниченное количество водителей",
@@ -122,24 +122,24 @@ const Pricing = () => {
           
           <div className="grid md:grid-cols-3 gap-8 mb-16">
             {plans.map((plan, index) => (
-              <Card key={index} className={`relative hover-lift border-0 shadow-soft ${plan.popular ? 'ring-2 ring-primary' : ''}`}>
+              <Card key={index} className={`relative hover-lift border-0 shadow-soft hover:shadow-elegant transition-all duration-300 ${plan.popular ? 'ring-2 ring-primary bg-gradient-to-b from-primary/5 to-transparent' : 'bg-card'}`}>
                 {plan.popular && (
-                  <Badge className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-primary">
+                  <Badge className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-primary to-primary-hover shadow-lg">
                     <Star className="w-3 h-3 mr-1" />
                     Популярный
                   </Badge>
                 )}
                 
                 <CardHeader className="text-center">
-                  <div className={`w-12 h-12 ${plan.color} rounded-lg flex items-center justify-center mx-auto mb-4 text-white`}>
+                  <div className={`w-14 h-14 ${plan.color} rounded-xl flex items-center justify-center mx-auto mb-4 text-white transform hover:scale-105 transition-transform duration-200`}>
                     {plan.icon}
                   </div>
                   <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                  <CardDescription className="text-muted-foreground">
+                  <CardDescription className="text-muted-foreground mb-4">
                     {plan.description}
                   </CardDescription>
                   <div className="mt-4">
-                    <span className="text-4xl font-bold">{plan.price}</span>
+                    <span className="text-4xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">{plan.price}</span>
                     <span className="text-muted-foreground ml-2">₽/мес</span>
                   </div>
                 </CardHeader>
@@ -162,7 +162,7 @@ const Pricing = () => {
                   
                   <Link to="/login">
                     <Button 
-                      className={`w-full ${plan.popular ? 'shadow-elegant' : ''}`}
+                      className={`w-full ${plan.popular ? 'bg-gradient-to-r from-primary to-primary-hover shadow-elegant hover:shadow-lg transform hover:scale-[1.02] transition-all duration-200' : 'hover:shadow-soft'}`}
                       variant={plan.popular ? 'default' : 'outline'}
                     >
                       {plan.price === "0" ? 'Начать бесплатно' : 'Выбрать план'}
