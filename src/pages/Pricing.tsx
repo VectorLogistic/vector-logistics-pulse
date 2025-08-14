@@ -205,7 +205,7 @@ const Pricing = () => {
                   <Button variant="secondary" size="lg">
                     Связаться с продажами
                   </Button>
-                  <Button variant="outline" size="lg" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+                  <Button variant="outline" size="lg" className="border-white/80 text-white bg-white/10 hover:bg-white hover:text-primary font-medium">
                     Заказать демо
                   </Button>
                 </div>
