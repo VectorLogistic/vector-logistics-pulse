@@ -233,7 +233,7 @@ const Index = () => {
               </Button>
             </Link>
             <Link to="/pricing">
-              <Button size="lg" variant="outline" className="text-lg px-8 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+              <Button size="lg" variant="outline" className="text-lg px-8 border-white/80 text-white bg-white/10 hover:bg-white hover:text-primary font-medium">
                 Посмотреть тарифы
               </Button>
             </Link>
