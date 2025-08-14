@@ -103,6 +103,7 @@ function AppSidebar() {
               variant="ghost" 
               size="sm" 
               className="w-full mt-3 text-sidebar-foreground hover:bg-sidebar-accent"
+              onClick={() => window.location.href = '/login'}
             >
               <LogOut className="w-4 h-4 mr-2" />
               Выйти
