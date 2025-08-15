@@ -4,6 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { 
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { 
   Table,
   TableBody,
@@ -12,13 +18,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { 
   Tabs,
   TabsContent,
@@ -31,14 +30,61 @@ import {
   DollarSign,
   Fuel,
   Calendar,
-  FileText
+  FileText,
+  ChevronDown,
+  Search,
+  X
 } from "lucide-react";
 
 const Reports = () => {
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
-  const [selectedDriver, setSelectedDriver] = useState("all");
-  const [selectedVehicle, setSelectedVehicle] = useState("all");
+  const [selectedDrivers, setSelectedDrivers] = useState<string[]>([]);
+  const [selectedVehicles, setSelectedVehicles] = useState<string[]>([]);
+  const [driverSearch, setDriverSearch] = useState("");
+  const [vehicleSearch, setVehicleSearch] = useState("");
+
+  const drivers = [
+    { id: "ivanov", name: "Иванов А.П." },
+    { id: "petrov", name: "Петров В.С." },
+    { id: "sidorov", name: "Сидоров М.И." },
+    { id: "kozlov", name: "Козлов Д.А." },
+    { id: "smirnov", name: "Смирнов И.В." },
+    { id: "fedorov", name: "Фёдоров П.К." },
+  ];
+
+  const vehicles = [
+    { id: "kamaz", name: "КамАЗ 5490 (А123БВ199)" },
+    { id: "maz", name: "МАЗ 6430 (В456ГД777)" },
+    { id: "volvo", name: "Volvo FH16 (С789ЕЖ199)" },
+    { id: "mercedes", name: "Mercedes Actros (К345ЛМ777)" },
+    { id: "scania", name: "Scania R450 (М789НО199)" },
+    { id: "man", name: "MAN TGX (О234ПР777)" },
+  ];
+
+  const filteredDrivers = drivers.filter(driver => 
+    driver.name.toLowerCase().includes(driverSearch.toLowerCase())
+  );
+
+  const filteredVehicles = vehicles.filter(vehicle => 
+    vehicle.name.toLowerCase().includes(vehicleSearch.toLowerCase())
+  );
+
+  const handleDriverToggle = (driverId: string) => {
+    setSelectedDrivers(prev => 
+      prev.includes(driverId) 
+        ? prev.filter(id => id !== driverId)
+        : [...prev, driverId]
+    );
+  };
+
+  const handleVehicleToggle = (vehicleId: string) => {
+    setSelectedVehicles(prev => 
+      prev.includes(vehicleId) 
+        ? prev.filter(id => id !== vehicleId)
+        : [...prev, vehicleId]
+    );
+  };
 
   const salaryData = [
     {
@@ -160,34 +206,158 @@ const Reports = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Водитель</Label>
-                <Select value={selectedDriver} onValueChange={setSelectedDriver}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Все водители" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Все водители</SelectItem>
-                    <SelectItem value="ivanov">Иванов А.П.</SelectItem>
-                    <SelectItem value="petrov">Петров В.С.</SelectItem>
-                    <SelectItem value="sidorov">Сидоров М.И.</SelectItem>
-                    <SelectItem value="kozlov">Козлов Д.А.</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label>Водители</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      className="w-full justify-between bg-background border-input"
+                    >
+                      {selectedDrivers.length === 0 
+                        ? "Все водители" 
+                        : selectedDrivers.length === 1 
+                          ? drivers.find(d => d.id === selectedDrivers[0])?.name
+                          : `Выбрано: ${selectedDrivers.length}`
+                      }
+                      <ChevronDown className="h-4 w-4 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[300px] p-0 bg-background border border-border shadow-lg z-50">
+                    <div className="p-3 border-b">
+                      <div className="relative">
+                        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          placeholder="Поиск водителей..."
+                          value={driverSearch}
+                          onChange={(e) => setDriverSearch(e.target.value)}
+                          className="pl-8"
+                        />
+                      </div>
+                    </div>
+                    <div className="max-h-60 overflow-y-auto">
+                      <div className="p-2">
+                        <div className="flex items-center space-x-2 p-2 rounded hover:bg-accent">
+                          <Checkbox
+                            id="all-drivers"
+                            checked={selectedDrivers.length === drivers.length}
+                            onCheckedChange={(checked) => {
+                              if (checked) {
+                                setSelectedDrivers(drivers.map(d => d.id));
+                              } else {
+                                setSelectedDrivers([]);
+                              }
+                            }}
+                          />
+                          <label htmlFor="all-drivers" className="text-sm font-medium cursor-pointer">
+                            Выбрать всех
+                          </label>
+                        </div>
+                        {filteredDrivers.map((driver) => (
+                          <div key={driver.id} className="flex items-center space-x-2 p-2 rounded hover:bg-accent">
+                            <Checkbox
+                              id={driver.id}
+                              checked={selectedDrivers.includes(driver.id)}
+                              onCheckedChange={() => handleDriverToggle(driver.id)}
+                            />
+                            <label htmlFor={driver.id} className="text-sm cursor-pointer">
+                              {driver.name}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    {selectedDrivers.length > 0 && (
+                      <div className="p-2 border-t">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setSelectedDrivers([])}
+                          className="h-6 text-xs"
+                        >
+                          <X className="h-3 w-3 mr-1" />
+                          Очистить
+                        </Button>
+                      </div>
+                    )}
+                  </PopoverContent>
+                </Popover>
               </div>
               <div className="space-y-2">
-                <Label>ТС</Label>
-                <Select value={selectedVehicle} onValueChange={setSelectedVehicle}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Все ТС" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Все ТС</SelectItem>
-                    <SelectItem value="kamaz">КамАЗ 5490</SelectItem>
-                    <SelectItem value="maz">МАЗ 6430</SelectItem>
-                    <SelectItem value="volvo">Volvo FH16</SelectItem>
-                    <SelectItem value="mercedes">Mercedes Actros</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label>Транспортные средства</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      className="w-full justify-between bg-background border-input"
+                    >
+                      {selectedVehicles.length === 0 
+                        ? "Все ТС" 
+                        : selectedVehicles.length === 1 
+                          ? vehicles.find(v => v.id === selectedVehicles[0])?.name
+                          : `Выбрано: ${selectedVehicles.length}`
+                      }
+                      <ChevronDown className="h-4 w-4 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[350px] p-0 bg-background border border-border shadow-lg z-50">
+                    <div className="p-3 border-b">
+                      <div className="relative">
+                        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          placeholder="Поиск ТС..."
+                          value={vehicleSearch}
+                          onChange={(e) => setVehicleSearch(e.target.value)}
+                          className="pl-8"
+                        />
+                      </div>
+                    </div>
+                    <div className="max-h-60 overflow-y-auto">
+                      <div className="p-2">
+                        <div className="flex items-center space-x-2 p-2 rounded hover:bg-accent">
+                          <Checkbox
+                            id="all-vehicles"
+                            checked={selectedVehicles.length === vehicles.length}
+                            onCheckedChange={(checked) => {
+                              if (checked) {
+                                setSelectedVehicles(vehicles.map(v => v.id));
+                              } else {
+                                setSelectedVehicles([]);
+                              }
+                            }}
+                          />
+                          <label htmlFor="all-vehicles" className="text-sm font-medium cursor-pointer">
+                            Выбрать все
+                          </label>
+                        </div>
+                        {filteredVehicles.map((vehicle) => (
+                          <div key={vehicle.id} className="flex items-center space-x-2 p-2 rounded hover:bg-accent">
+                            <Checkbox
+                              id={vehicle.id}
+                              checked={selectedVehicles.includes(vehicle.id)}
+                              onCheckedChange={() => handleVehicleToggle(vehicle.id)}
+                            />
+                            <label htmlFor={vehicle.id} className="text-sm cursor-pointer">
+                              {vehicle.name}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    {selectedVehicles.length > 0 && (
+                      <div className="p-2 border-t">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setSelectedVehicles([])}
+                          className="h-6 text-xs"
+                        >
+                          <X className="h-3 w-3 mr-1" />
+                          Очистить
+                        </Button>
+                      </div>
+                    )}
+                  </PopoverContent>
+                </Popover>
               </div>
               <div className="flex items-end">
                 <Button className="w-full">
