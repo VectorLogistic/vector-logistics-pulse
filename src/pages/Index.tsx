@@ -28,15 +28,15 @@ const Index = () => {
           </div>
           
           <nav className="hidden md:flex items-center space-x-8">
-            <Link to="#features" className="text-muted-foreground hover:text-foreground transition-colors">
+            <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">
               Возможности
-            </Link>
+            </a>
             <Link to="/pricing" className="text-muted-foreground hover:text-foreground transition-colors">
               Тарифы
             </Link>
-            <Link to="#about" className="text-muted-foreground hover:text-foreground transition-colors">
+            <a href="#about" className="text-muted-foreground hover:text-foreground transition-colors">
               О нас
-            </Link>
+            </a>
           </nav>
           
           <div className="flex items-center space-x-4">
@@ -215,6 +215,79 @@ const Index = () => {
         </div>
       </section>
 
+      {/* About Section */}
+      <section id="about" className="py-20 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              О компании Vector
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Мы — команда экспертов в области логистики и IT-разработки, создающая решения для современного транспортного бизнеса
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h3 className="text-2xl font-semibold mb-6">Наша миссия</h3>
+              <p className="text-muted-foreground mb-6 text-lg">
+                Упростить управление грузоперевозками и сделать логистические процессы максимально эффективными и прозрачными для бизнеса любого размера.
+              </p>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="w-6 h-6 text-success mt-0.5" />
+                  <div>
+                    <h4 className="font-semibold">Опыт более 10 лет</h4>
+                    <p className="text-muted-foreground">В сфере логистики и разработки ПО</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="w-6 h-6 text-success mt-0.5" />
+                  <div>
+                    <h4 className="font-semibold">500+ довольных клиентов</h4>
+                    <p className="text-muted-foreground">Транспортные компании по всей России</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="w-6 h-6 text-success mt-0.5" />
+                  <div>
+                    <h4 className="font-semibold">Круглосуточная поддержка</h4>
+                    <p className="text-muted-foreground">Техническая помощь 24/7</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-6">
+              <Card className="text-center p-6 border-0 shadow-soft">
+                <CardContent className="p-0">
+                  <div className="text-3xl font-bold text-primary mb-2">10M+</div>
+                  <p className="text-muted-foreground">Километров в системе</p>
+                </CardContent>
+              </Card>
+              <Card className="text-center p-6 border-0 shadow-soft">
+                <CardContent className="p-0">
+                  <div className="text-3xl font-bold text-primary mb-2">50K+</div>
+                  <p className="text-muted-foreground">Рейсов обработано</p>
+                </CardContent>
+              </Card>
+              <Card className="text-center p-6 border-0 shadow-soft">
+                <CardContent className="p-0">
+                  <div className="text-3xl font-bold text-primary mb-2">99.9%</div>
+                  <p className="text-muted-foreground">Время работы</p>
+                </CardContent>
+              </Card>
+              <Card className="text-center p-6 border-0 shadow-soft">
+                <CardContent className="p-0">
+                  <div className="text-3xl font-bold text-primary mb-2">24/7</div>
+                  <p className="text-muted-foreground">Поддержка клиентов</p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 px-4 bg-primary text-primary-foreground">
         <div className="container mx-auto max-w-4xl text-center">
@@ -233,7 +306,7 @@ const Index = () => {
               </Button>
             </Link>
             <Link to="/pricing">
-              <Button size="lg" variant="outline" className="text-lg px-8 border-white/80 text-black bg-white/10 hover:bg-white hover:text-primary font-medium">
+              <Button size="lg" variant="outline" className="text-lg px-8 border-white/80 text-white bg-white/10 hover:bg-white hover:text-primary font-medium">
                 Посмотреть тарифы
               </Button>
             </Link>
