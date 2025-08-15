@@ -11,6 +11,7 @@ import Fleet from "./pages/Fleet";
 import Drivers from "./pages/Drivers";
 import Trips from "./pages/Trips";
 import Reports from "./pages/Reports";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/drivers" element={<Drivers />} />
           <Route path="/trips" element={<Trips />} />
           <Route path="/reports" element={<Reports />} />
+          <Route path="/settings" element={<Settings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
