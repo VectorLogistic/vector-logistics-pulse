@@ -28,7 +28,7 @@ import {
   Trash2,
   Users,
   Phone,
-  DollarSign
+  Coins
 } from "lucide-react";
 
 const Drivers = () => {
@@ -273,7 +273,7 @@ const Drivers = () => {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center">
-                        <DollarSign className="w-4 h-4 mr-1 text-muted-foreground" />
+                        <Coins className="w-4 h-4 mr-1 text-muted-foreground" />
                         {driver.hourlyRate} ₽/час
                       </div>
                     </TableCell>

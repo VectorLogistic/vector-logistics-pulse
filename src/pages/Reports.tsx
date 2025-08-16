@@ -27,7 +27,7 @@ import {
 import { 
   BarChart3, 
   Download,
-  DollarSign,
+  Coins,
   Fuel,
   Calendar,
   FileText,
@@ -378,7 +378,7 @@ const Reports = () => {
                   <p className="text-2xl font-bold">₽{totalSalaryExpenses.toLocaleString()}</p>
                 </div>
                 <div className="p-3 bg-primary/10 rounded-lg">
-                  <DollarSign className="w-5 h-5 text-primary" />
+                  <Coins className="w-5 h-5 text-primary" />
                 </div>
               </div>
             </CardContent>

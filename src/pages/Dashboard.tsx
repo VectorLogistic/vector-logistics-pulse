@@ -7,7 +7,7 @@ import {
   Truck, 
   Users, 
   MapPin, 
-  DollarSign,
+  Coins,
   Calendar,
   AlertTriangle
 } from "lucide-react";
@@ -40,7 +40,7 @@ const Dashboard = () => {
       value: "₽2,450,000",
       change: "+12%",
       changeType: "positive",
-      icon: <DollarSign className="w-4 h-4" />
+      icon: <Coins className="w-4 h-4" />
     }
   ];
 
