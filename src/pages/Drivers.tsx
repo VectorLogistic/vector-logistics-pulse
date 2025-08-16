@@ -28,14 +28,23 @@ import {
   Trash2,
   Users,
   Phone,
-  Coins
+  Coins,
+  RefreshCw
 } from "lucide-react";
 
 const Drivers = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingDriver, setEditingDriver] = useState<any>(null);
+  const [newDriver, setNewDriver] = useState({
+    fullName: "",
+    phone: "",
+    hourlyRate: "",
+    experience: ""
+  });
 
-  const drivers = [
+  const [drivers, setDrivers] = useState([
     {
       id: 1,
       name: "Иванов Алексей Петрович",
@@ -86,7 +95,67 @@ const Drivers = () => {
       totalTrips: 124,
       experience: "7 лет"
     }
-  ];
+  ]);
+
+  const handleAddDriver = () => {
+    if (newDriver.fullName && newDriver.phone && newDriver.hourlyRate) {
+      const driver = {
+        id: drivers.length + 1,
+        name: newDriver.fullName,
+        phone: newDriver.phone,
+        hourlyRate: parseInt(newDriver.hourlyRate) || 0,
+        status: "Свободен",
+        currentVehicle: null,
+        totalTrips: 0,
+        experience: newDriver.experience || "0 лет"
+      };
+      
+      setDrivers([...drivers, driver]);
+      setNewDriver({ fullName: "", phone: "", hourlyRate: "", experience: "" });
+      setIsAddDialogOpen(false);
+    }
+  };
+
+  const handleEditDriver = (driver: any) => {
+    setEditingDriver(driver);
+    setNewDriver({
+      fullName: driver.name,
+      phone: driver.phone,
+      hourlyRate: driver.hourlyRate.toString(),
+      experience: driver.experience
+    });
+    setIsEditDialogOpen(true);
+  };
+
+  const handleUpdateDriver = () => {
+    if (editingDriver && newDriver.fullName && newDriver.phone && newDriver.hourlyRate) {
+      const updatedDrivers = drivers.map(d => 
+        d.id === editingDriver.id 
+          ? {
+              ...d,
+              name: newDriver.fullName,
+              phone: newDriver.phone,
+              hourlyRate: parseInt(newDriver.hourlyRate) || 0,
+              experience: newDriver.experience
+            }
+          : d
+      );
+      
+      setDrivers(updatedDrivers);
+      setNewDriver({ fullName: "", phone: "", hourlyRate: "", experience: "" });
+      setEditingDriver(null);
+      setIsEditDialogOpen(false);
+    }
+  };
+
+  const handleDeleteDriver = (driverId: number) => {
+    setDrivers(drivers.filter(d => d.id !== driverId));
+  };
+
+  const handleRefresh = () => {
+    // Здесь можно добавить логику обновления данных с сервера
+    console.log("Обновление списка водителей");
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -142,27 +211,107 @@ const Drivers = () => {
               <div className="grid gap-4 py-4">
                 <div className="grid gap-2">
                   <Label htmlFor="fullName">ФИО</Label>
-                  <Input id="fullName" placeholder="Иванов Иван Иванович" />
+                  <Input 
+                    id="fullName" 
+                    placeholder="Иванов Иван Иванович" 
+                    value={newDriver.fullName}
+                    onChange={(e) => setNewDriver({...newDriver, fullName: e.target.value})}
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="phone">Номер телефона</Label>
-                  <Input id="phone" placeholder="+7 (999) 123-45-67" />
+                  <Input 
+                    id="phone" 
+                    placeholder="+7 (999) 123-45-67" 
+                    value={newDriver.phone}
+                    onChange={(e) => setNewDriver({...newDriver, phone: e.target.value})}
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="hourlyRate">Ставка за час (₽)</Label>
-                  <Input id="hourlyRate" type="number" placeholder="800" />
+                  <Input 
+                    id="hourlyRate" 
+                    type="number" 
+                    placeholder="800" 
+                    value={newDriver.hourlyRate}
+                    onChange={(e) => setNewDriver({...newDriver, hourlyRate: e.target.value})}
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="experience">Опыт работы</Label>
-                  <Input id="experience" placeholder="5 лет" />
+                  <Input 
+                    id="experience" 
+                    placeholder="5 лет" 
+                    value={newDriver.experience}
+                    onChange={(e) => setNewDriver({...newDriver, experience: e.target.value})}
+                  />
                 </div>
               </div>
               <div className="flex justify-end space-x-2">
                 <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
                   Отмена
                 </Button>
-                <Button onClick={() => setIsAddDialogOpen(false)}>
+                <Button onClick={handleAddDriver}>
                   Добавить
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          {/* Edit Driver Dialog */}
+          <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Редактировать водителя</DialogTitle>
+                <DialogDescription>
+                  Измените информацию о водителе
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="editFullName">ФИО</Label>
+                  <Input 
+                    id="editFullName" 
+                    placeholder="Иванов Иван Иванович" 
+                    value={newDriver.fullName}
+                    onChange={(e) => setNewDriver({...newDriver, fullName: e.target.value})}
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="editPhone">Номер телефона</Label>
+                  <Input 
+                    id="editPhone" 
+                    placeholder="+7 (999) 123-45-67" 
+                    value={newDriver.phone}
+                    onChange={(e) => setNewDriver({...newDriver, phone: e.target.value})}
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="editHourlyRate">Ставка за час (₽)</Label>
+                  <Input 
+                    id="editHourlyRate" 
+                    type="number" 
+                    placeholder="800" 
+                    value={newDriver.hourlyRate}
+                    onChange={(e) => setNewDriver({...newDriver, hourlyRate: e.target.value})}
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="editExperience">Опыт работы</Label>
+                  <Input 
+                    id="editExperience" 
+                    placeholder="5 лет" 
+                    value={newDriver.experience}
+                    onChange={(e) => setNewDriver({...newDriver, experience: e.target.value})}
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end space-x-2">
+                <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+                  Отмена
+                </Button>
+                <Button onClick={handleUpdateDriver}>
+                  Сохранить
                 </Button>
               </div>
             </DialogContent>
@@ -231,10 +380,24 @@ const Drivers = () => {
         {/* Drivers Table */}
         <Card className="border-0 shadow-soft">
           <CardHeader>
-            <CardTitle>Список водителей</CardTitle>
-            <CardDescription>
-              Управляйте информацией о ваших водителях
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center space-x-2">
+                  <span>Список водителей</span>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={handleRefresh}
+                    className="ml-2 p-1 h-auto"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                  </Button>
+                </CardTitle>
+                <CardDescription>
+                  Управляйте информацией о ваших водителях
+                </CardDescription>
+              </div>
+            </div>
             <div className="flex space-x-2">
               <div className="relative flex-1 max-w-sm">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -289,10 +452,19 @@ const Drivers = () => {
                     <TableCell>{driver.experience}</TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
-                        <Button variant="ghost" size="sm">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleEditDriver(driver)}
+                        >
                           <Edit className="w-4 h-4" />
                         </Button>
-                        <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="text-destructive hover:text-destructive"
+                          onClick={() => handleDeleteDriver(driver.id)}
+                        >
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>

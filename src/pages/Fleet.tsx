@@ -35,14 +35,24 @@ import {
   Trash2,
   Truck,
   Fuel,
-  Weight
+  Weight,
+  RefreshCw
 } from "lucide-react";
 
 const Fleet = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-
-  const vehicles = [
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingVehicle, setEditingVehicle] = useState<any>(null);
+  const [newVehicle, setNewVehicle] = useState({
+    model: "",
+    licensePlate: "",
+    type: "",
+    fuelConsumption: "",
+    capacity: ""
+  });
+  
+  const [vehicles, setVehicles] = useState([
     {
       id: 1,
       model: "КамАЗ 5490",
@@ -93,7 +103,69 @@ const Fleet = () => {
       status: "Доступна",
       driver: null
     }
-  ];
+  ]);
+
+  const handleAddVehicle = () => {
+    if (newVehicle.model && newVehicle.licensePlate && newVehicle.type) {
+      const vehicle = {
+        id: vehicles.length + 1,
+        model: newVehicle.model,
+        licensePlate: newVehicle.licensePlate,
+        type: newVehicle.type,
+        fuelConsumption: parseFloat(newVehicle.fuelConsumption) || 0,
+        capacity: parseInt(newVehicle.capacity) || 0,
+        status: "Доступна",
+        driver: null
+      };
+      
+      setVehicles([...vehicles, vehicle]);
+      setNewVehicle({ model: "", licensePlate: "", type: "", fuelConsumption: "", capacity: "" });
+      setIsAddDialogOpen(false);
+    }
+  };
+
+  const handleEditVehicle = (vehicle: any) => {
+    setEditingVehicle(vehicle);
+    setNewVehicle({
+      model: vehicle.model,
+      licensePlate: vehicle.licensePlate,
+      type: vehicle.type,
+      fuelConsumption: vehicle.fuelConsumption.toString(),
+      capacity: vehicle.capacity.toString()
+    });
+    setIsEditDialogOpen(true);
+  };
+
+  const handleUpdateVehicle = () => {
+    if (editingVehicle && newVehicle.model && newVehicle.licensePlate && newVehicle.type) {
+      const updatedVehicles = vehicles.map(v => 
+        v.id === editingVehicle.id 
+          ? {
+              ...v,
+              model: newVehicle.model,
+              licensePlate: newVehicle.licensePlate,
+              type: newVehicle.type,
+              fuelConsumption: parseFloat(newVehicle.fuelConsumption) || 0,
+              capacity: parseInt(newVehicle.capacity) || 0
+            }
+          : v
+      );
+      
+      setVehicles(updatedVehicles);
+      setNewVehicle({ model: "", licensePlate: "", type: "", fuelConsumption: "", capacity: "" });
+      setEditingVehicle(null);
+      setIsEditDialogOpen(false);
+    }
+  };
+
+  const handleDeleteVehicle = (vehicleId: number) => {
+    setVehicles(vehicles.filter(v => v.id !== vehicleId));
+  };
+
+  const handleRefresh = () => {
+    // Здесь можно добавить логику обновления данных с сервера
+    console.log("Обновление списка транспортных средств");
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -143,41 +215,137 @@ const Fleet = () => {
               <div className="grid gap-4 py-4">
                 <div className="grid gap-2">
                   <Label htmlFor="model">Модель</Label>
-                  <Input id="model" placeholder="КамАЗ 5490" />
+                  <Input 
+                    id="model" 
+                    placeholder="КамАЗ 5490" 
+                    value={newVehicle.model}
+                    onChange={(e) => setNewVehicle({...newVehicle, model: e.target.value})}
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="licensePlate">Госномер</Label>
-                  <Input id="licensePlate" placeholder="А123БВ199" />
+                  <Input 
+                    id="licensePlate" 
+                    placeholder="А123БВ199" 
+                    value={newVehicle.licensePlate}
+                    onChange={(e) => setNewVehicle({...newVehicle, licensePlate: e.target.value})}
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="type">Тип ТС</Label>
-                  <Select>
+                  <Select value={newVehicle.type} onValueChange={(value) => setNewVehicle({...newVehicle, type: value})}>
                     <SelectTrigger>
                       <SelectValue placeholder="Выберите тип" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="truck">Седельный тягач</SelectItem>
-                      <SelectItem value="flatbed">Бортовой</SelectItem>
-                      <SelectItem value="van">Фургон</SelectItem>
-                      <SelectItem value="tanker">Цистерна</SelectItem>
+                    <SelectContent className="bg-background border shadow-md z-50">
+                      <SelectItem value="Седельный тягач">Седельный тягач</SelectItem>
+                      <SelectItem value="Бортовой">Бортовой</SelectItem>
+                      <SelectItem value="Фургон">Фургон</SelectItem>
+                      <SelectItem value="Цистерна">Цистерна</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="fuelConsumption">Расход топлива (л/100км)</Label>
-                  <Input id="fuelConsumption" type="number" placeholder="28.5" />
+                  <Input 
+                    id="fuelConsumption" 
+                    type="number" 
+                    placeholder="28.5" 
+                    value={newVehicle.fuelConsumption}
+                    onChange={(e) => setNewVehicle({...newVehicle, fuelConsumption: e.target.value})}
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="capacity">Грузоподъёмность (кг)</Label>
-                  <Input id="capacity" type="number" placeholder="20000" />
+                  <Input 
+                    id="capacity" 
+                    type="number" 
+                    placeholder="20000" 
+                    value={newVehicle.capacity}
+                    onChange={(e) => setNewVehicle({...newVehicle, capacity: e.target.value})}
+                  />
                 </div>
               </div>
               <div className="flex justify-end space-x-2">
                 <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
                   Отмена
                 </Button>
-                <Button onClick={() => setIsAddDialogOpen(false)}>
+                <Button onClick={handleAddVehicle}>
                   Добавить
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          {/* Edit Vehicle Dialog */}
+          <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Редактировать транспортное средство</DialogTitle>
+                <DialogDescription>
+                  Измените информацию о ТС
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="editModel">Модель</Label>
+                  <Input 
+                    id="editModel" 
+                    placeholder="КамАЗ 5490" 
+                    value={newVehicle.model}
+                    onChange={(e) => setNewVehicle({...newVehicle, model: e.target.value})}
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="editLicensePlate">Госномер</Label>
+                  <Input 
+                    id="editLicensePlate" 
+                    placeholder="А123БВ199" 
+                    value={newVehicle.licensePlate}
+                    onChange={(e) => setNewVehicle({...newVehicle, licensePlate: e.target.value})}
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="editType">Тип ТС</Label>
+                  <Select value={newVehicle.type} onValueChange={(value) => setNewVehicle({...newVehicle, type: value})}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Выберите тип" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background border shadow-md z-50">
+                      <SelectItem value="Седельный тягач">Седельный тягач</SelectItem>
+                      <SelectItem value="Бортовой">Бортовой</SelectItem>
+                      <SelectItem value="Фургон">Фургон</SelectItem>
+                      <SelectItem value="Цистерна">Цистерна</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="editFuelConsumption">Расход топлива (л/100км)</Label>
+                  <Input 
+                    id="editFuelConsumption" 
+                    type="number" 
+                    placeholder="28.5" 
+                    value={newVehicle.fuelConsumption}
+                    onChange={(e) => setNewVehicle({...newVehicle, fuelConsumption: e.target.value})}
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="editCapacity">Грузоподъёмность (кг)</Label>
+                  <Input 
+                    id="editCapacity" 
+                    type="number" 
+                    placeholder="20000" 
+                    value={newVehicle.capacity}
+                    onChange={(e) => setNewVehicle({...newVehicle, capacity: e.target.value})}
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end space-x-2">
+                <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+                  Отмена
+                </Button>
+                <Button onClick={handleUpdateVehicle}>
+                  Сохранить
                 </Button>
               </div>
             </DialogContent>
@@ -191,7 +359,7 @@ const Fleet = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Всего машин</p>
-                  <p className="text-2xl font-bold">24</p>
+                  <p className="text-2xl font-bold">{vehicles.length}</p>
                 </div>
                 <div className="p-3 bg-primary/10 rounded-lg">
                   <Truck className="w-5 h-5 text-primary" />
@@ -205,7 +373,7 @@ const Fleet = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Доступно</p>
-                  <p className="text-2xl font-bold text-success">8</p>
+                  <p className="text-2xl font-bold text-success">{vehicles.filter(v => v.status === "Доступна").length}</p>
                 </div>
                 <div className="p-3 bg-success/10 rounded-lg">
                   <Truck className="w-5 h-5 text-success" />
@@ -219,7 +387,7 @@ const Fleet = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">В рейсе</p>
-                  <p className="text-2xl font-bold text-primary">12</p>
+                  <p className="text-2xl font-bold text-primary">{vehicles.filter(v => v.status === "В рейсе").length}</p>
                 </div>
                 <div className="p-3 bg-primary/10 rounded-lg">
                   <Truck className="w-5 h-5 text-primary" />
@@ -233,7 +401,7 @@ const Fleet = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">На ТО</p>
-                  <p className="text-2xl font-bold text-warning">4</p>
+                  <p className="text-2xl font-bold text-warning">{vehicles.filter(v => v.status === "На ТО").length}</p>
                 </div>
                 <div className="p-3 bg-warning/10 rounded-lg">
                   <Truck className="w-5 h-5 text-warning" />
@@ -246,10 +414,24 @@ const Fleet = () => {
         {/* Vehicles Table */}
         <Card className="border-0 shadow-soft">
           <CardHeader>
-            <CardTitle>Список транспортных средств</CardTitle>
-            <CardDescription>
-              Управляйте информацией о ваших ТС
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center space-x-2">
+                  <span>Список транспортных средств</span>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={handleRefresh}
+                    className="ml-2 p-1 h-auto"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                  </Button>
+                </CardTitle>
+                <CardDescription>
+                  Управляйте информацией о ваших ТС
+                </CardDescription>
+              </div>
+            </div>
             <div className="flex space-x-2">
               <div className="relative flex-1 max-w-sm">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -298,10 +480,19 @@ const Fleet = () => {
                     <TableCell>{vehicle.driver || "—"}</TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
-                        <Button variant="ghost" size="sm">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleEditVehicle(vehicle)}
+                        >
                           <Edit className="w-4 h-4" />
                         </Button>
-                        <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="text-destructive hover:text-destructive"
+                          onClick={() => handleDeleteVehicle(vehicle.id)}
+                        >
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
