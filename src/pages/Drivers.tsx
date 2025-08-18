@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,10 +30,12 @@ import {
   Users,
   Phone,
   Coins,
-  RefreshCw
+  RefreshCw,
+  Eye
 } from "lucide-react";
 
 const Drivers = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -455,7 +458,16 @@ const Drivers = () => {
                         <Button 
                           variant="ghost" 
                           size="sm"
+                          onClick={() => navigate(`/drivers/${driver.id}`)}
+                          title="Посмотреть профиль"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
                           onClick={() => handleEditDriver(driver)}
+                          title="Редактировать"
                         >
                           <Edit className="w-4 h-4" />
                         </Button>
@@ -464,6 +476,7 @@ const Drivers = () => {
                           size="sm" 
                           className="text-destructive hover:text-destructive"
                           onClick={() => handleDeleteDriver(driver.id)}
+                          title="Удалить"
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
