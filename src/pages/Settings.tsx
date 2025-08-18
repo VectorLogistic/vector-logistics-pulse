@@ -247,6 +247,135 @@ const Settings = () => {
                 </div>
               </CardContent>
             </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Calculator className="w-5 h-5" />
+                  <span>Настройки оплаты труда</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="defaultSalaryType">Тип расчета зарплаты по умолчанию</Label>
+                    <Select defaultValue="salary">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Выберите тип расчета" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="salary">Оклад</SelectItem>
+                        <SelectItem value="hourly">Почасовая</SelectItem>
+                        <SelectItem value="per_km">За каждый пройденный км</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="baseSalary">Базовая ставка (₽)</Label>
+                      <Input 
+                        id="baseSalary" 
+                        type="number" 
+                        placeholder="50000" 
+                        defaultValue="50000"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="hourlyRate">Почасовая ставка (₽/час)</Label>
+                      <Input 
+                        id="hourlyRate" 
+                        type="number" 
+                        placeholder="300" 
+                        defaultValue="300"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="kmRate">Ставка за км (₽/км)</Label>
+                    <Input 
+                      id="kmRate" 
+                      type="number" 
+                      placeholder="15" 
+                      defaultValue="15"
+                    />
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium flex items-center space-x-2">
+                    <Coins className="w-5 h-5" />
+                    <span>Настройки премий</span>
+                  </h3>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="bonusType">Тип премии по умолчанию</Label>
+                    <Select defaultValue="fixed">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Выберите тип премии" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="fixed">Фиксированная сумма</SelectItem>
+                        <SelectItem value="percentage">Процент от зарплаты</SelectItem>
+                        <SelectItem value="per_trip">За каждый рейс</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="fixedBonus">Фиксированная премия (₽)</Label>
+                      <Input 
+                        id="fixedBonus" 
+                        type="number" 
+                        placeholder="5000" 
+                        defaultValue="5000"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="bonusPercentage">Процент премии (%)</Label>
+                      <Input 
+                        id="bonusPercentage" 
+                        type="number" 
+                        placeholder="10" 
+                        defaultValue="10"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="tripBonus">Премия за рейс (₽)</Label>
+                      <Input 
+                        id="tripBonus" 
+                        type="number" 
+                        placeholder="500" 
+                        defaultValue="500"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox id="enableAutoBonus" defaultChecked />
+                    <Label htmlFor="enableAutoBonus">Автоматически начислять премии</Label>
+                  </div>
+                </div>
+
+                <Separator />
+                
+                <div className="bg-muted/50 p-4 rounded-lg">
+                  <p className="text-sm text-muted-foreground">
+                    <strong>Примечание:</strong> Эти настройки будут применяться по умолчанию для всех новых водителей. 
+                    Для существующих водителей можно изменить индивидуальные настройки в разделе "Водители".
+                  </p>
+                </div>
+
+                <Button>
+                  <Save className="w-4 h-4 mr-2" />
+                  Сохранить настройки оплаты
+                </Button>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="notifications" className="space-y-6">
