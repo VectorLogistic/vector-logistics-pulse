@@ -41,8 +41,11 @@ import {
   ShieldCheck
 } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
+import { useState } from "react";
 
 const Settings = () => {
+  const [salaryType, setSalaryType] = useState("salary");
+  const [bonusType, setBonusType] = useState("fixed");
   const roles = [
     {
       id: "admin",
@@ -259,7 +262,7 @@ const Settings = () => {
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="defaultSalaryType">Тип расчета зарплаты по умолчанию</Label>
-                    <Select defaultValue="salary">
+                    <Select value={salaryType} onValueChange={setSalaryType}>
                       <SelectTrigger>
                         <SelectValue placeholder="Выберите тип расчета" />
                       </SelectTrigger>
@@ -271,7 +274,8 @@ const Settings = () => {
                     </Select>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  {/* Динамические поля в зависимости от типа расчета */}
+                  {salaryType === "salary" && (
                     <div className="space-y-2">
                       <Label htmlFor="baseSalary">Базовая ставка (₽)</Label>
                       <Input 
@@ -281,6 +285,9 @@ const Settings = () => {
                         defaultValue="50000"
                       />
                     </div>
+                  )}
+
+                  {salaryType === "hourly" && (
                     <div className="space-y-2">
                       <Label htmlFor="hourlyRate">Почасовая ставка (₽/час)</Label>
                       <Input 
@@ -290,17 +297,19 @@ const Settings = () => {
                         defaultValue="300"
                       />
                     </div>
-                  </div>
+                  )}
 
-                  <div className="space-y-2">
-                    <Label htmlFor="kmRate">Ставка за км (₽/км)</Label>
-                    <Input 
-                      id="kmRate" 
-                      type="number" 
-                      placeholder="15" 
-                      defaultValue="15"
-                    />
-                  </div>
+                  {salaryType === "per_km" && (
+                    <div className="space-y-2">
+                      <Label htmlFor="kmRate">Ставка за км (₽/км)</Label>
+                      <Input 
+                        id="kmRate" 
+                        type="number" 
+                        placeholder="15" 
+                        defaultValue="15"
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <Separator />
@@ -313,7 +322,7 @@ const Settings = () => {
                   
                   <div className="space-y-2">
                     <Label htmlFor="bonusType">Тип премии по умолчанию</Label>
-                    <Select defaultValue="fixed">
+                    <Select value={bonusType} onValueChange={setBonusType}>
                       <SelectTrigger>
                         <SelectValue placeholder="Выберите тип премии" />
                       </SelectTrigger>
@@ -325,7 +334,8 @@ const Settings = () => {
                     </Select>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4">
+                  {/* Динамические поля в зависимости от типа премии */}
+                  {bonusType === "fixed" && (
                     <div className="space-y-2">
                       <Label htmlFor="fixedBonus">Фиксированная премия (₽)</Label>
                       <Input 
@@ -335,6 +345,9 @@ const Settings = () => {
                         defaultValue="5000"
                       />
                     </div>
+                  )}
+
+                  {bonusType === "percentage" && (
                     <div className="space-y-2">
                       <Label htmlFor="bonusPercentage">Процент премии (%)</Label>
                       <Input 
@@ -344,6 +357,9 @@ const Settings = () => {
                         defaultValue="10"
                       />
                     </div>
+                  )}
+
+                  {bonusType === "per_trip" && (
                     <div className="space-y-2">
                       <Label htmlFor="tripBonus">Премия за рейс (₽)</Label>
                       <Input 
@@ -353,7 +369,7 @@ const Settings = () => {
                         defaultValue="500"
                       />
                     </div>
-                  </div>
+                  )}
 
                   <div className="flex items-center space-x-2">
                     <Checkbox id="enableAutoBonus" defaultChecked />
