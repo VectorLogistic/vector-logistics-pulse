@@ -36,14 +36,18 @@ import {
   Truck,
   Fuel,
   Weight,
-  RefreshCw
+  RefreshCw,
+  User
 } from "lucide-react";
 
 const Fleet = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isAssignDriverDialogOpen, setIsAssignDriverDialogOpen] = useState(false);
   const [editingVehicle, setEditingVehicle] = useState<any>(null);
+  const [assigningVehicle, setAssigningVehicle] = useState<any>(null);
+  const [selectedDriverId, setSelectedDriverId] = useState("");
   const [newVehicle, setNewVehicle] = useState({
     model: "",
     licensePlate: "",
@@ -105,6 +109,37 @@ const Fleet = () => {
     }
   ]);
 
+  // Available drivers (in real app this would come from API)
+  const [drivers] = useState([
+    {
+      id: 1,
+      name: "Иванов Алексей Петрович",
+      status: "Свободен"
+    },
+    {
+      id: 2,
+      name: "Петров Владимир Сергеевич", 
+      status: "В рейсе"
+    },
+    {
+      id: 3,
+      name: "Сидоров Михаил Иванович",
+      status: "Загрузка"
+    },
+    {
+      id: 4,
+      name: "Козлов Дмитрий Александрович",
+      status: "Свободен"
+    },
+    {
+      id: 5,
+      name: "Морозов Андрей Викторович",
+      status: "Отпуск"
+    }
+  ]);
+
+  const availableDrivers = drivers.filter(d => d.status === "Свободен");
+
   const handleAddVehicle = () => {
     if (newVehicle.model && newVehicle.licensePlate && newVehicle.type) {
       const vehicle = {
@@ -165,6 +200,29 @@ const Fleet = () => {
   const handleRefresh = () => {
     // Здесь можно добавить логику обновления данных с сервера
     console.log("Обновление списка транспортных средств");
+  };
+
+  const handleAssignDriver = (vehicle: any) => {
+    setAssigningVehicle(vehicle);
+    setSelectedDriverId("");
+    setIsAssignDriverDialogOpen(true);
+  };
+
+  const handleConfirmAssignDriver = () => {
+    if (assigningVehicle && selectedDriverId) {
+      const selectedDriver = drivers.find(d => d.id.toString() === selectedDriverId);
+      if (selectedDriver) {
+        const updatedVehicles = vehicles.map(v => 
+          v.id === assigningVehicle.id 
+            ? { ...v, driver: selectedDriver.name }
+            : v
+        );
+        setVehicles(updatedVehicles);
+        setIsAssignDriverDialogOpen(false);
+        setAssigningVehicle(null);
+        setSelectedDriverId("");
+      }
+    }
   };
 
   const getStatusBadge = (status: string) => {
@@ -350,6 +408,51 @@ const Fleet = () => {
               </div>
             </DialogContent>
           </Dialog>
+
+          {/* Assign Driver Dialog */}
+          <Dialog open={isAssignDriverDialogOpen} onOpenChange={setIsAssignDriverDialogOpen}>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Назначить водителя</DialogTitle>
+                <DialogDescription>
+                  Выберите водителя для транспортного средства {assigningVehicle?.model} ({assigningVehicle?.licensePlate})
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="driverSelect">Доступные водители</Label>
+                  <Select value={selectedDriverId} onValueChange={setSelectedDriverId}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Выберите водителя" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background border shadow-md z-50">
+                      {availableDrivers.map((driver) => (
+                        <SelectItem key={driver.id} value={driver.id.toString()}>
+                          {driver.name}
+                        </SelectItem>
+                      ))}
+                      {availableDrivers.length === 0 && (
+                        <SelectItem value="" disabled>
+                          Нет доступных водителей
+                        </SelectItem>
+                      )}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="flex justify-end space-x-2">
+                <Button variant="outline" onClick={() => setIsAssignDriverDialogOpen(false)}>
+                  Отмена
+                </Button>
+                <Button 
+                  onClick={handleConfirmAssignDriver}
+                  disabled={!selectedDriverId || availableDrivers.length === 0}
+                >
+                  Назначить
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {/* Stats Cards */}
@@ -477,7 +580,24 @@ const Fleet = () => {
                       </div>
                     </TableCell>
                     <TableCell>{getStatusBadge(vehicle.status)}</TableCell>
-                    <TableCell>{vehicle.driver || "—"}</TableCell>
+                     <TableCell>
+                       {vehicle.driver ? (
+                         <div className="flex items-center">
+                           <User className="w-4 h-4 mr-1 text-muted-foreground" />
+                           {vehicle.driver}
+                         </div>
+                       ) : (
+                         <Button 
+                           variant="outline" 
+                           size="sm"
+                           onClick={() => handleAssignDriver(vehicle)}
+                           className="text-xs"
+                         >
+                           <User className="w-3 h-3 mr-1" />
+                           Назначить
+                         </Button>
+                       )}
+                     </TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
                         <Button 
