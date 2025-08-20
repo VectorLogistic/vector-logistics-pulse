@@ -225,6 +225,20 @@ const Fleet = () => {
     }
   };
 
+  const handleRemoveDriver = () => {
+    if (assigningVehicle) {
+      const updatedVehicles = vehicles.map(v => 
+        v.id === assigningVehicle.id 
+          ? { ...v, driver: null }
+          : v
+      );
+      setVehicles(updatedVehicles);
+      setIsAssignDriverDialogOpen(false);
+      setAssigningVehicle(null);
+      setSelectedDriverId("");
+    }
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "Доступна":
@@ -413,12 +427,29 @@ const Fleet = () => {
           <Dialog open={isAssignDriverDialogOpen} onOpenChange={setIsAssignDriverDialogOpen}>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
-                <DialogTitle>Назначить водителя</DialogTitle>
+                <DialogTitle>
+                  {assigningVehicle?.driver ? "Изменить водителя" : "Назначить водителя"}
+                </DialogTitle>
                 <DialogDescription>
-                  Выберите водителя для транспортного средства {assigningVehicle?.model} ({assigningVehicle?.licensePlate})
+                  {assigningVehicle?.driver 
+                    ? `Измените водителя для ТС ${assigningVehicle?.model} (${assigningVehicle?.licensePlate}). Текущий водитель: ${assigningVehicle?.driver}`
+                    : `Выберите водителя для транспортного средства ${assigningVehicle?.model} (${assigningVehicle?.licensePlate})`
+                  }
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
+                {assigningVehicle?.driver && (
+                  <div className="grid gap-2">
+                    <Button 
+                      variant="outline" 
+                      className="w-full text-destructive hover:text-destructive"
+                      onClick={handleRemoveDriver}
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Убрать назначение
+                    </Button>
+                  </div>
+                )}
                 <div className="grid gap-2">
                   <Label htmlFor="driverSelect">Доступные водители</Label>
                   <Select value={selectedDriverId} onValueChange={setSelectedDriverId}>
@@ -448,7 +479,7 @@ const Fleet = () => {
                   onClick={handleConfirmAssignDriver}
                   disabled={!selectedDriverId || availableDrivers.length === 0}
                 >
-                  Назначить
+                  {assigningVehicle?.driver ? "Изменить" : "Назначить"}
                 </Button>
               </div>
             </DialogContent>
@@ -582,9 +613,19 @@ const Fleet = () => {
                     <TableCell>{getStatusBadge(vehicle.status)}</TableCell>
                      <TableCell>
                        {vehicle.driver ? (
-                         <div className="flex items-center">
-                           <User className="w-4 h-4 mr-1 text-muted-foreground" />
-                           {vehicle.driver}
+                         <div className="flex items-center space-x-2">
+                           <div className="flex items-center">
+                             <User className="w-4 h-4 mr-1 text-muted-foreground" />
+                             {vehicle.driver}
+                           </div>
+                           <Button 
+                             variant="ghost" 
+                             size="sm"
+                             onClick={() => handleAssignDriver(vehicle)}
+                             className="text-xs"
+                           >
+                             <Edit className="w-3 h-3" />
+                           </Button>
                          </div>
                        ) : (
                          <Button 

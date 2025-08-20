@@ -11,6 +11,23 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { 
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   ArrowLeft,
   Phone,
@@ -54,6 +71,17 @@ const DriverProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [driver, setDriver] = useState<Driver | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editForm, setEditForm] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    hourlyRate: "",
+    salaryType: "",
+    address: "",
+    licenseNumber: "",
+    licenseExpiry: ""
+  });
 
   // Мокированные данные водителей (в реальном приложении будут из API)
   const mockDrivers: Driver[] = [
@@ -150,6 +178,44 @@ const DriverProfile = () => {
     }
   };
 
+  const handleEditClick = () => {
+    if (driver) {
+      setEditForm({
+        name: driver.name,
+        phone: driver.phone,
+        email: driver.email,
+        hourlyRate: driver.hourlyRate.toString(),
+        salaryType: driver.salaryType,
+        address: driver.address,
+        licenseNumber: driver.licenseNumber,
+        licenseExpiry: driver.licenseExpiry
+      });
+    }
+  };
+
+  const handleSaveChanges = () => {
+    if (driver) {
+      // В реальном приложении здесь был бы API-запрос для обновления данных
+      const updatedDriver = {
+        ...driver,
+        name: editForm.name,
+        phone: editForm.phone,
+        email: editForm.email,
+        hourlyRate: parseInt(editForm.hourlyRate) || driver.hourlyRate,
+        salaryType: editForm.salaryType as Driver["salaryType"],
+        address: editForm.address,
+        licenseNumber: editForm.licenseNumber,
+        licenseExpiry: editForm.licenseExpiry
+      };
+      
+      setDriver(updatedDriver);
+      setIsEditDialogOpen(false);
+      
+      // Здесь можно добавить уведомление об успешном сохранении
+      console.log("Данные водителя обновлены:", updatedDriver);
+    }
+  };
+
   if (!driver) {
     return (
       <DashboardLayout>
@@ -181,10 +247,110 @@ const DriverProfile = () => {
               <p className="text-muted-foreground">Подробная информация и аналитика</p>
             </div>
           </div>
-          <Button>
-            <Edit className="w-4 h-4 mr-2" />
-            Редактировать профиль
-          </Button>
+          <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+            <DialogTrigger asChild>
+              <Button onClick={handleEditClick}>
+                <Edit className="w-4 h-4 mr-2" />
+                Редактировать профиль
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Редактировать профиль водителя</DialogTitle>
+                <DialogDescription>
+                  Измените информацию о водителе
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="editName">ФИО</Label>
+                    <Input 
+                      id="editName" 
+                      value={editForm.name}
+                      onChange={(e) => setEditForm({...editForm, name: e.target.value})}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="editPhone">Телефон</Label>
+                    <Input 
+                      id="editPhone" 
+                      value={editForm.phone}
+                      onChange={(e) => setEditForm({...editForm, phone: e.target.value})}
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="editEmail">Email</Label>
+                    <Input 
+                      id="editEmail" 
+                      type="email"
+                      value={editForm.email}
+                      onChange={(e) => setEditForm({...editForm, email: e.target.value})}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="editHourlyRate">Ставка за час (₽)</Label>
+                    <Input 
+                      id="editHourlyRate" 
+                      type="number"
+                      value={editForm.hourlyRate}
+                      onChange={(e) => setEditForm({...editForm, hourlyRate: e.target.value})}
+                    />
+                  </div>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="editSalaryType">Тип расчета</Label>
+                  <Select value={editForm.salaryType} onValueChange={(value) => setEditForm({...editForm, salaryType: value})}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Выберите тип расчета" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="salary">Оклад</SelectItem>
+                      <SelectItem value="hourly">Почасовая оплата</SelectItem>
+                      <SelectItem value="per_km">За километр</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="editAddress">Адрес</Label>
+                  <Input 
+                    id="editAddress" 
+                    value={editForm.address}
+                    onChange={(e) => setEditForm({...editForm, address: e.target.value})}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="editLicenseNumber">Номер ВУ</Label>
+                    <Input 
+                      id="editLicenseNumber" 
+                      value={editForm.licenseNumber}
+                      onChange={(e) => setEditForm({...editForm, licenseNumber: e.target.value})}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="editLicenseExpiry">Действительно до</Label>
+                    <Input 
+                      id="editLicenseExpiry" 
+                      type="date"
+                      value={editForm.licenseExpiry}
+                      onChange={(e) => setEditForm({...editForm, licenseExpiry: e.target.value})}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-end space-x-2">
+                <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+                  Отмена
+                </Button>
+                <Button onClick={handleSaveChanges}>
+                  Сохранить изменения
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
