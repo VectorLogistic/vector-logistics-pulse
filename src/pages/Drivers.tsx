@@ -31,7 +31,8 @@ import {
   Phone,
   Coins,
   RefreshCw,
-  Eye
+  Eye,
+  User
 } from "lucide-react";
 
 const Drivers = () => {
@@ -461,7 +462,7 @@ const Drivers = () => {
                           onClick={() => navigate(`/drivers/${driver.id}`)}
                           title="Посмотреть профиль"
                         >
-                          <Eye className="w-4 h-4" />
+                          <User className="w-4 h-4" />
                         </Button>
                         <Button 
                           variant="ghost" 
