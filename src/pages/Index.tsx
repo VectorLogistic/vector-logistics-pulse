@@ -24,7 +24,7 @@ const Index = () => {
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <Truck className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold">Vector</span>
+            <span className="text-xl font-bold">VectorLogistic</span>
           </div>
           
           <nav className="hidden md:flex items-center space-x-8">
@@ -220,7 +220,7 @@ const Index = () => {
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              О компании Vector
+              О компании VectorLogistic
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Мы — команда экспертов в области логистики и IT-разработки, создающая решения для современного транспортного бизнеса
@@ -295,7 +295,7 @@ const Index = () => {
             Готовы оптимизировать свою логистику?
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Присоединяйтесь к сотням компаний, которые уже используют Vector
+            Присоединяйтесь к сотням компаний, которые уже используют VectorLogistic
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -323,7 +323,7 @@ const Index = () => {
                 <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                   <Truck className="w-5 h-5 text-primary-foreground" />
                 </div>
-                <span className="text-xl font-bold">Vector</span>
+                <span className="text-xl font-bold">VectorLogistic</span>
               </div>
               <p className="text-muted-foreground">
                 Современная платформа для автоматизации грузоперевозок
@@ -359,7 +359,7 @@ const Index = () => {
           </div>
           
           <div className="border-t mt-8 pt-8 text-center text-muted-foreground">
-            <p>&copy; 2024 Vector. Все права защищены.</p>
+            <p>&copy; 2024 VectorLogistic. Все права защищены.</p>
           </div>
         </div>
       </footer>

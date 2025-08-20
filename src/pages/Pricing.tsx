@@ -94,7 +94,7 @@ const Pricing = () => {
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <Truck className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold">Vector</span>
+            <span className="text-xl font-bold">VectorLogistic</span>
           </Link>
           
           <div className="flex items-center space-x-4">
@@ -116,7 +116,7 @@ const Pricing = () => {
               Выберите свой план
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Масштабируйте свой бизнес с Vector. Все планы включают основной функционал.
+              Масштабируйте свой бизнес с VectorLogistic. Все планы включают основной функционал.
             </p>
           </div>
           

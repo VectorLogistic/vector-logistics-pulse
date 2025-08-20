@@ -8,7 +8,7 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Vector design system colors - professional logistics theme */
+    /* VectorLogistic design system colors - professional logistics theme */
     --background: 210 40% 98%;
     --foreground: 215 25% 15%;
 
@@ -18,7 +18,7 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 215 25% 15%;
 
-    /* Primary: Blue theme for Vector logistics */
+    /* Primary: Blue theme for VectorLogistic logistics */
     --primary: 221 83% 53%;
     --primary-foreground: 0 0% 100%;
     --primary-hover: 221 83% 45%;
@@ -130,7 +130,7 @@ All colors MUST be HSL.
     @apply bg-background text-foreground font-inter antialiased;
   }
 
-  /* Custom animations for Vector platform */
+  /* Custom animations for VectorLogistic platform */
   .animate-slide-up {
     animation: slideUp 0.4s ease-out;
   }

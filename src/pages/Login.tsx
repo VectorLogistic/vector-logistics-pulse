@@ -34,7 +34,7 @@ const Login = () => {
             <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
               <Truck className="w-6 h-6 text-primary-foreground" />
             </div>
-            <span className="text-2xl font-bold">Vector</span>
+            <span className="text-2xl font-bold">VectorLogistic</span>
           </div>
           
           <h1 className="text-2xl font-bold mb-2">Добро пожаловать</h1>
