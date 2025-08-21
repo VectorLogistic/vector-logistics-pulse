@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Fleet from "./pages/Fleet";
 import Drivers from "./pages/Drivers";
 import DriverProfile from "./pages/DriverProfile";
+import VehicleProfile from "./pages/VehicleProfile";
 import Trips from "./pages/Trips";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/fleet" element={<Fleet />} />
+          <Route path="/fleet/:id" element={<VehicleProfile />} />
           <Route path="/drivers" element={<Drivers />} />
           <Route path="/drivers/:id" element={<DriverProfile />} />
           <Route path="/trips" element={<Trips />} />
